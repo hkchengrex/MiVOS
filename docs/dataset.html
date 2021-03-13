@@ -19,21 +19,9 @@
     <div class="container">
       <br><br>
       <h5 class="header center blue-text text-darken-2">Modular Interactive Video Object Segmentation: <br> Interaction-to-Mask, Propagation and Difference-Aware Fusion</h5>
-      <!-- <h6 class="header center"><i>Under Review</i></h6> -->
-      <div class="row center">
-        <h5 class="header col s12 light">Ho Kei Cheng, Yu-Wing Tai, Chi-Keung Tang</h5>
-      </div>
-      <div class="row center">
-        <div class="col s12 center">
-          <a href="https://github.com/hkchengrex/MiVOS" class="larger-text">[Code, Models and Results]</a>
-          &nbsp;&nbsp;&nbsp;
-          <a href="dataset.html" class="larger-text">[Dataset: BL30K]</a>
-          &nbsp;&nbsp;&nbsp;
-          <a href="video.html" class="larger-text">[Video Results]</a>
-          &nbsp;&nbsp;&nbsp;
-          <a href="paper.html" class="larger-text">[Paper]</a>
-        </div>
-      </div>
+    </div>
+    <div class="row center">
+      <h5 class="header col s12 light">BL30K Dataset</h5>
     </div>
   </div>
 
@@ -44,56 +32,93 @@
       <div class="col s12 m4 l4 center">
       <figure>
         <video preload="auto" autoplay muted loop class="videoInsert">
-          <source src="https://i.imgur.com/zLAJmot.mp4" type="video/mp4">
+          <source src="https://i.imgur.com/6rwmq1I.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-      <figcaption><i>motorcross-jump, DAVIS 2017 validation set.</i></figcaption>
       </figure>
       </div>
       
       <div class="col s12 m4 l4 center">
       <figure>
         <video preload="auto" autoplay muted loop class="videoInsert">
-          <source src="https://i.imgur.com/rrK3SNj.mp4" type="video/mp4">
+          <source src="https://i.imgur.com/aN3eDiv.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
       </video>
-      <figcaption><i> Academy of Historical Fencing. <a href="https://youtu.be/966ulgwEcyc">[Source]</a></i></figcaption>
       </figure>
       </div>
 
       <div class="col s12 m4 l4 center">
-      <figure>        
+      <figure>
         <video preload="auto" autoplay muted loop class="videoInsert">
-          <source src="https://i.imgur.com/XfuChcZ.mp4" type="video/mp4">
+          <source src="https://i.imgur.com/wZJbCqT.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
-        <figcaption><i>Modern History TV. <a href="https://youtu.be/e_D1ZQ7Hu0g">[Source]</a></i></figcaption>
       </figure>
       </div>
     </div>
 
-      <div class="row">
-        <div class="col s12 l10 push-l1 xl8 push-xl2">
-          <img class="materialboxed" width="100%" src="https://imgur.com/Iw9uOx5.jpg">
-        </div>
+    <div class="row center">
+      <div class="col s12 m4 l4 center">
+      <figure>
+        <video preload="auto" autoplay muted loop class="videoInsert">
+          <source src="https://i.imgur.com/Sl9yPN2.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </figure>
       </div>
+      
+      <div class="col s12 m4 l4 center">
+      <figure>
+        <video preload="auto" autoplay muted loop class="videoInsert">
+          <source src="https://i.imgur.com/Lv0BkjK.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </video>
+      </figure>
+      </div>
+      
+      <div class="col s12 m4 l4 center">
+      <figure>
+        <video preload="auto" autoplay muted loop class="videoInsert">
+          <source src="https://i.imgur.com/N9iiBG0.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </figure>
+      </div>
+    </div>
 
     </div>
 
-  <div class="divider"></div>
     <div class="section">
-      <h5 class="header center">Abstract</h1>
-        <div class="row">
-          <div class="col s12 l10 push-l1 xl8 push-xl2">
-            <p style="text-align: justify;">
-              We present Modular interactive VOS (MiVOS) framework which decouples interaction-to-mask and mask propagation, allowing for higher generalizability and better performance. Trained separately, the interaction module converts user interactions to an object mask, which is then temporally propagated by our 
-              propagation module using a novel top-$k$ filtering strategy in reading the space-time memory. To effectively take the user's intent into account, a novel difference-aware module is proposed to learn how to properly fuse the masks before and after each interaction, which are aligned with the target frames by  employing the space-time memory.
-              We evaluate our method both qualitatively and quantitatively with different forms of user interactions (e.g., scribbles, clicks) on DAVIS to show that our method outperforms current state-of-the-art algorithms while requiring fewer frame interactions, with the additional advantage in generalizing to different types of user interactions.
-              We contribute a large-scale synthetic VOS dataset with pixel-accurate segmentation of 4.8M frames to accompany our source codes to facilitate future research.
-            </p>
-          </div>
+      <div class="row">
+        <div class="col s12 l10 push-l1 xl8 push-xl2">
+        <h5 class="header">BL30K: </h1>
+        <ul>
+          <li>- 29,989 synthetic videos using 51,300 animated 3D models</li>
+          <li>- Each video has 160 frames</li>
+          <li>- Each frame has a resolution of 768*512, with pixel-accurate annotation</li>
+          <li>- 3-5 objects per video</li>
+          <li>- Object intersections are minimized using a greedy avoidance algorithm</li>
+        </ul>
         </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="row">
+        <div class="col s12 l10 push-l1 xl8 push-xl2">
+        <h5 class="header">Download: </h1>
+        <p>
+          We break the dataset into six segments, each with approximately 5K videos. We noted that using probably half of the data is sufficient to reach full performance (although we still used all), but using less than one-sixth (5K) is insufficient.
+        </p>
+
+        <a href="https://github.com/hkchengrex/MiVOS" class="larger-text">[Google Drive]</a>
+        &nbsp;&nbsp;&nbsp;
+        <a href="https://github.com/hkchengrex/MiVOS" class="larger-text">[OneDrive]</a>
+        
+        </div>
+      </div>
     </div>
   </div>
 

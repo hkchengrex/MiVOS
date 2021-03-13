@@ -12,3 +12,7 @@
 .icon-block .material-icons {
 	font-size: inherit;
 }
+
+.larger-text {
+  font-size: x-large;
+}
