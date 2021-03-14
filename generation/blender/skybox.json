@@ -1,0 +1,228 @@
+{
+    "Records": [
+        {
+            "keywords": "city",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "daytime",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "factory",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "hill",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "house",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "ice",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "iceberg",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "indoor",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "mall",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "nature",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "night",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "outdoor",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "road",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "room",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "sea",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "sky",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "store",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "street",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "town",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "traffic",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "universe",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "village",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "wall",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "wild",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "farm",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "land",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "building",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "highland",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "field",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "apartment",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "living room",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        },
+        {
+            "keywords": "kitchen",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "skybox"
+        }
+    ]
+}

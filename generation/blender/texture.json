@@ -1,0 +1,109 @@
+{
+    "Records": [
+        {
+            "keywords": "wood texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "metal texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "tree texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "glass texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "plastic texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "brick texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "wall texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "concrete texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "dirt texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "paper texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "skin texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "meat texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "hair texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "electronics texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "fur texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        }
+    ]
+}

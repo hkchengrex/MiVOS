@@ -1,0 +1,39 @@
+{
+    "Records": [
+        {
+            "keywords": "stone texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "fabric texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "pebble texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "sand texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        },
+        {
+            "keywords": "beach texture",
+            "limit": 300,
+            "usage_rights": "labeled-for-nocommercial-reuse",
+            "print_urls": true,
+            "output_directory": "texture"
+        }
+    ]
+}
