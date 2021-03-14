@@ -49,7 +49,7 @@ We used these packages/versions in the development of this project. It is likely
 
 ## Main Results
 
-## [DAVIS/YouTube semi-supervised results](https://github.com/hkchengrex/Mask-Propagation/#main-results)
+### [DAVIS/YouTube semi-supervised results](https://github.com/hkchengrex/Mask-Propagation/#main-results)
 
 ### DAVIS Interactive Track
 
