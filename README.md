@@ -114,7 +114,7 @@ Manual download: [[Google Drive]](https://drive.google.com/drive/folders/1KxriFZ
 2. Install [Blender](https://www.blender.org/). (We used 2.82)
 3. Download a bunch of background and texture images. We used [this repo](https://github.com/hardikvasa/google-images-download) (we specified "non-commercial reuse" in the script) and the list of keywords are provided in generation/blender/*.json.
 4. Generate a list of configuration files (generation/blender/generate_yaml.py).
-5. Run rendering on the configurations.
+5. Run rendering on the configurations. [See here](https://github.com/hkchengrex/BlenderVOSRenderer)
 (Not documented in detail, ask if you have a question)
 
 ### Fusion data
