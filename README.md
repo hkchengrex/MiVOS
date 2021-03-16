@@ -34,12 +34,19 @@ We manage the project using three different repositories (which are actually in 
 We used these packages/versions in the development of this project. It is likely that higher versions of the same package will also work. This is not an exhaustive list -- other common python packages (e.g. pillow) are expected and not listed.
 
 - PyTorch `1.7.1`
+- torchvision `0.8.2`
 - OpenCV `4.2.0`
-- progressbar (`pip install progressbar2`)
+- Cython
+- progressbar
 - davis-interactive (<https://github.com/albertomontesg/davis-interactive>)
+- PyQt5 for GUI
 - networkx `2.4` for DAVIS
-- gitpython for training (`pip install gitpython`)
-- gdown for downloading pretrained models (`pip install gdown`)
+- gitpython for training
+- gdown for downloading pretrained models
+
+Refer to the official [PyTorch guide]((<https://pytorch.org/>)) for installing PyTorch/torchvision. The rest can be installed by:
+
+`pip install PyQt5 davisinteractive progressbar2 opencv-python networkx gitpython gdown Cython`
 
 ## Quick start
 
