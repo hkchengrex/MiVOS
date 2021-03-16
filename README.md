@@ -8,7 +8,7 @@ CVPR 2021
 
 ![demo1](https://imgur.com/Q1ck2TJ.gif) ![demo2](https://imgur.com/pyrYKCJ.gif) ![demo3](https://imgur.com/K4Qq9iS.gif)
 
-Credit (left to right): DAVIS 2017, [Academy of Historical Fencing](https://youtu.be/966ulgwEcyc), [Modern History TV](https://youtu.be/e_D1ZQ7Hu0g)
+<sub><sup>Credit (left to right): DAVIS 2017, [Academy of Historical Fencing](https://youtu.be/966ulgwEcyc), [Modern History TV](https://youtu.be/e_D1ZQ7Hu0g)</sup></sub>
 
 We manage the project using three different repositories (which are actually in the paper title). This is the main repo, see also [Mask-Propagation](https://github.com/hkchengrex/Mask-Propagation) and [Scribble-to-Mask](https://github.com/hkchengrex/Scribble-to-Mask).
 
