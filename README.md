@@ -129,7 +129,7 @@ Manual download: [[Google Drive]](https://drive.google.com/drive/folders/1KxriFZ
 
 We use the propagation module to run through some data and obtain real outputs to train the fusion module. See the script `generate_fusion.py`.
 
-Or you can download pre-generated fusion data:
+Or you can download pre-generated fusion data: [[Google Drive]](https://drive.google.com/file/d/1NF1APCxb9jzyDaEApHMN24aFPsqnYH6G/view?usp=sharing) [[OneDrive]](https://uillinoisedu-my.sharepoint.com/:u:/g/personal/hokeikc2_illinois_edu/EXNrnDbvZfxKqDDbfkEqJh8BTTfXFHnQlZ73oBsetRwOJg?e=RP1WjE)
 
 ### Training commands
 
