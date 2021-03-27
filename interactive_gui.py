@@ -50,7 +50,7 @@ palette = pal_color_map()
 
 class App(QWidget):
     def __init__(self, prop_net, fuse_net, s2m_ctrl:S2MController, fbrs_ctrl:FBRSController, 
-                    images, masks, num_objects, mem_freq):
+                    images, masks, num_objects, mem_freq, mem_profile):
         super().__init__()
 
         self.images = images
@@ -59,7 +59,7 @@ class App(QWidget):
         self.s2m_controller = s2m_ctrl
         self.fbrs_controller = fbrs_ctrl
         self.processor = InferenceCore(prop_net, fuse_net, images_to_torch(images, device='cpu'),
-                         num_objects, mem_freq=mem_freq, mem_profile=0)
+                         num_objects, mem_freq=mem_freq, mem_profile=mem_profile)
 
         self.num_frames, self.height, self.width = self.images.shape[:3]
 
@@ -987,6 +987,7 @@ if __name__ == '__main__':
     parser.add_argument('--video', help='Video file readable by OpenCV. Either this or --images need to be specified.', default='example/example.mp4')
     parser.add_argument('--num_objects', help='Default: 1 if no masks provided, masks.max() otherwise', type=int)
     parser.add_argument('--mem_freq', default=5, type=int)
+    parser.add_argument('--mem_profile', default=0, type=int, help='0 - Faster and more memory intensive; 2 - Slower and less memory intensive. Default: 0.')
     parser.add_argument('--masks', help='Optional, Ground truth masks', default=None)
     args = parser.parse_args()
 
@@ -1041,6 +1042,6 @@ if __name__ == '__main__':
 
     app = QApplication(sys.argv)
     ex = App(prop_model, fusion_model, s2m_controller, fbrs_controller, 
-                images, masks, num_objects, args.mem_freq)
+                images, masks, num_objects, args.mem_freq, args.mem_profile)
     sys.exit(app.exec_())
 
