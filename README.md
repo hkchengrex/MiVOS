@@ -50,10 +50,20 @@ Refer to the official [PyTorch guide]((<https://pytorch.org/>)) for installing P
 
 ## Quick start
 
+### GUI
+
 1. `python download_model.py` to get all the required models.
 2. `python interactive_gui.py --video <path to video>` or `python interactive_gui.py --images <path to a folder of images>`. A video has been prepared for you at `examples/example.mp4`.
 3. If you need to label more than one object, additionally specify `--num_objects <number_of_objects>`. See all the argument options with `python interactive_gui.py --help`.
 4. There are instructions in the GUI. You can also watch the [demo videos](https://hkchengrex.github.io/MiVOS/video.html#partb) for some ideas.
+
+### DAVIS Interactive VOS
+
+See `eval_interactive_davis.py`. If you have downloaded the datasets and pretrained models using our script, you only need to specify the output path, i.e., `python eval_interactive_davis.py --output [somewhere]`.
+
+### DAVIS/YouTube Semi-supervised VOS
+
+Go to this repo: [Mask-Propagation](https://github.com/hkchengrex/Mask-Propagation).
 
 ## Main Results
 
