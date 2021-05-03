@@ -128,6 +128,17 @@ Manual download: [[Google Drive]](https://drive.google.com/drive/folders/1KxriFZ
 
 [UST Mirror] (Reliability not guaranteed, speed throttled, do not use if others are available): <ckcpu1.cse.ust.hk:8080/MiVOS/BL30K_{a-f}.tar> (Replace {a-f} with the part that you need).
 
+MD5 Checksum:
+
+```bash
+35312550b9a75467b60e3b2be2ceac81  BL30K_a.tar
+269e2f9ad34766b5f73fa117166c1731  BL30K_b.tar
+a3f7c2a62028d0cda555f484200127b9  BL30K_c.tar
+e659ed7c4e51f4c06326855f4aba8109  BL30K_d.tar
+d704e86c5a6a9e920e5e84996c2e0858  BL30K_e.tar
+bf73914d2888ad642bc01be60523caf6  BL30K_f.tar
+```
+
 #### Generation
 
 1. Download [ShapeNet](https://www.shapenet.org/).
