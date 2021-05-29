@@ -187,7 +187,7 @@ BlenderProc: <https://github.com/DLR-RM/BlenderProc>
 Please cite our paper if you find this repo useful!
 
 ```bibtex
-@inproceedings{MiVOS_2021,
+@inproceedings{cheng2021mivos,
   title={Modular Interactive Video Object Segmentation: Interaction-to-Mask, Propagation and Difference-Aware Fusion},
   author={Cheng, Ho Kei and Tai, Yu-Wing and Tang, Chi-Keung},
   booktitle={CVPR},
