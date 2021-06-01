@@ -195,4 +195,81 @@ Please cite our paper if you find this repo useful!
 }
 ```
 
+And if you want to cite the datasets:
+
+<details> 
+<summary>
+
+bibtex
+
+</summary>
+
+```bibtex
+@inproceedings{shi2015hierarchicalECSSD,
+  title={Hierarchical image saliency detection on extended CSSD},
+  author={Shi, Jianping and Yan, Qiong and Xu, Li and Jia, Jiaya},
+  booktitle={TPAMI},
+  year={2015},
+}
+
+@inproceedings{wang2017DUTS,
+  title={Learning to Detect Salient Objects with Image-level Supervision},
+  author={Wang, Lijun and Lu, Huchuan and Wang, Yifan and Feng, Mengyang 
+  and Wang, Dong, and Yin, Baocai and Ruan, Xiang}, 
+  booktitle={CVPR},
+  year={2017}
+}
+
+@inproceedings{FSS1000,
+  title = {FSS-1000: A 1000-Class Dataset for Few-Shot Segmentation},
+  author = {Li, Xiang and Wei, Tianhan and Chen, Yau Pun and Tai, Yu-Wing and Tang, Chi-Keung},
+  booktitle={CVPR},
+  year={2020}
+}
+
+@inproceedings{zeng2019towardsHRSOD,
+  title = {Towards High-Resolution Salient Object Detection},
+  author = {Zeng, Yi and Zhang, Pingping and Zhang, Jianming and Lin, Zhe and Lu, Huchuan},
+  booktitle = {ICCV},
+  year = {2019}
+}
+
+@inproceedings{cheng2020cascadepsp,
+  title={{CascadePSP}: Toward Class-Agnostic and Very High-Resolution Segmentation via Global and Local Refinement},
+  author={Cheng, Ho Kei and Chung, Jihoon and Tai, Yu-Wing and Tang, Chi-Keung},
+  booktitle={CVPR},
+  year={2020}
+}
+
+@inproceedings{xu2018youtubeVOS,
+  title={Youtube-vos: A large-scale video object segmentation benchmark},
+  author={Xu, Ning and Yang, Linjie and Fan, Yuchen and Yue, Dingcheng and Liang, Yuchen and Yang, Jianchao and Huang, Thomas},
+  booktitle = {ECCV},
+  year={2018}
+}
+
+@inproceedings{perazzi2016benchmark,
+  title={A benchmark dataset and evaluation methodology for video object segmentation},
+  author={Perazzi, Federico and Pont-Tuset, Jordi and McWilliams, Brian and Van Gool, Luc and Gross, Markus and Sorkine-Hornung, Alexander},
+  booktitle={CVPR},
+  year={2016}
+}
+
+@inproceedings{denninger2019blenderproc,
+  title={BlenderProc},
+  author={Denninger, Maximilian and Sundermeyer, Martin and Winkelbauer, Dominik and Zidan, Youssef and Olefir, Dmitry and Elbadrawy, Mohamad and Lodhi, Ahsan and Katam, Harinandan},
+  booktitle={arXiv:1911.01911},
+  year={2019}
+}
+
+@inproceedings{shapenet2015,
+  title       = {{ShapeNet: An Information-Rich 3D Model Repository}},
+  author      = {Chang, Angel Xuan and Funkhouser, Thomas and Guibas, Leonidas and Hanrahan, Pat and Huang, Qixing and Li, Zimo and Savarese, Silvio and Savva, Manolis and Song, Shuran and Su, Hao and Xiao, Jianxiong and Yi, Li and Yu, Fisher},
+  booktitle   = {arXiv:1512.03012},
+  year        = {2015}
+}
+```
+
+</details>
+
 Contact: <hkchengrex@gmail.com>
