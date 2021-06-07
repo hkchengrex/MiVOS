@@ -989,59 +989,61 @@ if __name__ == '__main__':
     parser.add_argument('--mem_freq', default=5, type=int)
     parser.add_argument('--mem_profile', default=0, type=int, help='0 - Faster and more memory intensive; 2 - Slower and less memory intensive. Default: 0.')
     parser.add_argument('--masks', help='Optional, Ground truth masks', default=None)
+    parser.add_argument('--no_amp', help='Turn off AMP', action='store_true')
     args = parser.parse_args()
 
-    # Load our checkpoint
-    prop_saved = torch.load(args.prop_model)
-    prop_model = PropagationNetwork().cuda().eval()
-    prop_model.load_state_dict(prop_saved)
+    with torch.cuda.amp.autocast(enabled=not args.no_amp):
+        # Load our checkpoint
+        prop_saved = torch.load(args.prop_model)
+        prop_model = PropagationNetwork().cuda().eval()
+        prop_model.load_state_dict(prop_saved)
 
-    fusion_saved = torch.load(args.fusion_model)
-    fusion_model = FusionNet().cuda().eval()
-    fusion_model.load_state_dict(fusion_saved)
+        fusion_saved = torch.load(args.fusion_model)
+        fusion_model = FusionNet().cuda().eval()
+        fusion_model.load_state_dict(fusion_saved)
 
-    # Loads the S2M model
-    if args.s2m_model is not None:
-        s2m_saved = torch.load(args.s2m_model)
-        s2m_model = S2M().cuda().eval()
-        s2m_model.load_state_dict(s2m_saved)
-    else:
-        s2m_model = None
-
-    # Loads the images/masks
-    if args.images is not None:
-        images = load_images(args.images, 480)
-    elif args.video is not None:
-        images = load_video(args.video, 480)
-    else:
-        raise NotImplementedError('You must specify either --images or --video!')
-
-    if args.masks is not None:
-        masks = load_masks(args.masks)
-    else:
-        masks = None
-
-    if args.masks is not None:
-        masks = load_masks(args.masks)
-    else:
-        masks = None
-    
-    # Determine the number of objects
-    num_objects = args.num_objects
-    if num_objects is None:
-        if masks is not None:
-            num_objects = masks.max()
+        # Loads the S2M model
+        if args.s2m_model is not None:
+            s2m_saved = torch.load(args.s2m_model)
+            s2m_model = S2M().cuda().eval()
+            s2m_model.load_state_dict(s2m_saved)
         else:
-            num_objects = 1
+            s2m_model = None
 
-    s2m_controller = S2MController(s2m_model, num_objects, ignore_class=255)
-    if args.fbrs_model is not None:
-        fbrs_controller = FBRSController(args.fbrs_model)
-    else:
-        fbrs_controller = None
+        # Loads the images/masks
+        if args.images is not None:
+            images = load_images(args.images, 480)
+        elif args.video is not None:
+            images = load_video(args.video, 480)
+        else:
+            raise NotImplementedError('You must specify either --images or --video!')
 
-    app = QApplication(sys.argv)
-    ex = App(prop_model, fusion_model, s2m_controller, fbrs_controller, 
-                images, masks, num_objects, args.mem_freq, args.mem_profile)
-    sys.exit(app.exec_())
+        if args.masks is not None:
+            masks = load_masks(args.masks)
+        else:
+            masks = None
+
+        if args.masks is not None:
+            masks = load_masks(args.masks)
+        else:
+            masks = None
+        
+        # Determine the number of objects
+        num_objects = args.num_objects
+        if num_objects is None:
+            if masks is not None:
+                num_objects = masks.max()
+            else:
+                num_objects = 1
+
+        s2m_controller = S2MController(s2m_model, num_objects, ignore_class=255)
+        if args.fbrs_model is not None:
+            fbrs_controller = FBRSController(args.fbrs_model)
+        else:
+            fbrs_controller = None
+
+        app = QApplication(sys.argv)
+        ex = App(prop_model, fusion_model, s2m_controller, fbrs_controller, 
+                    images, masks, num_objects, args.mem_freq, args.mem_profile)
+        sys.exit(app.exec_())
 
