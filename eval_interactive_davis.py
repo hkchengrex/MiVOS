@@ -13,19 +13,17 @@ from model.fusion_net import FusionNet
 from model.s2m.s2m_network import deeplabv3plus_resnet50 as S2M
 from dataset.davis_test_dataset import DAVISTestDataset
 from davis_processor import DAVISProcessor
-from util.tensor_util import compute_multi_class_iou
 
 from davisinteractive.dataset import Davis
 from davisinteractive import utils as d_utils
-from davisinteractive.utils.scribbles import scribbles2mask
 from davisinteractive.session.session import DavisInteractiveSession
 
 """
 Arguments loading
 """
 parser = ArgumentParser()
-parser.add_argument('--prop_model', default='saves/propagation_model.pth')
-parser.add_argument('--fusion_model', default='saves/fusion.pth')
+parser.add_argument('--prop_model', default='saves/stcn.pth')
+parser.add_argument('--fusion_model', default='saves/fusion_stcn.pth')
 parser.add_argument('--s2m_model', default='saves/s2m.pth')
 parser.add_argument('--davis', default='../DAVIS/2017')
 parser.add_argument('--output')

@@ -43,6 +43,8 @@ class FusionModel:
         self.optimizer = optim.Adam(filter(
             lambda p: p.requires_grad, self.net.parameters()), lr=para['lr'], weight_decay=1e-7)
         self.scheduler = optim.lr_scheduler.MultiStepLR(self.optimizer, para['steps'], para['gamma'])
+        if para['amp']:
+            self.scaler = torch.cuda.amp.GradScaler()
 
         # Logging info
         self.report_interval = 100
@@ -77,57 +79,65 @@ class FusionModel:
         dist = data['dist']
 
         out = {}
-        # Get kernelized memory
-        with torch.no_grad():
-            attn1, attn2 = self.prop_net(src2_ref_im, src2_ref, src2_ref_gt, src2_ref2, src2_ref_gt2, im)
 
-        prob1 = torch.sigmoid(self.net(im, seg1, seg2, attn1, dist))
-        prob2 = torch.sigmoid(self.net(im, seg12, seg22, attn2, dist))
-        prob = torch.cat([prob1, prob2], 1) * selector.unsqueeze(2).unsqueeze(2)
-        logits, prob = aggregate_wbg_channel(prob, True)
+        with torch.cuda.amp.autocast(enabled=self.para['amp']):
 
-        out['logits'] = logits
-        out['mask'] = prob
-        out['attn1'] = attn1
-        out['attn2'] = attn2
+            # Get kernelized memory
+            with torch.no_grad():
+                attn1, attn2 = self.prop_net(src2_ref_im, src2_ref, src2_ref_gt, src2_ref2, src2_ref_gt2, im)
 
-        if self._do_log or self._is_train:
-            losses = self.loss_computer.compute({**data, **out}, it)
+            prob1 = torch.sigmoid(self.net(im, seg1, seg2, attn1, dist))
+            prob2 = torch.sigmoid(self.net(im, seg12, seg22, attn2, dist))
+            prob = torch.cat([prob1, prob2], 1) * selector.unsqueeze(2).unsqueeze(2)
+            logits, prob = aggregate_wbg_channel(prob, True)
 
-            # Logging
-            if self._do_log:
-                self.integrator.add_dict(losses)
-                if self._is_train:
-                    if it % self.save_im_interval == 0 and it != 0:
-                        if self.logger is not None:
-                            images = {**data, **out}
-                            size = (320, 320)
-                            self.logger.log_cv2('train/pairs', pool_fusion(images, size=size), it)
-                else:
-                    # Validation save
-                    if data['val_iter'] % 10 == 0:
-                        if self.logger is not None:
-                            images = {**data, **out}
-                            size = (320, 320)
-                            self.logger.log_cv2('val/pairs', pool_fusion(images, size=size), it)
+            out['logits'] = logits
+            out['mask'] = prob
+            out['attn1'] = attn1
+            out['attn2'] = attn2
 
-        if self._is_train:
-            if (it) % self.report_interval == 0 and it != 0:
-                if self.logger is not None:
-                    self.logger.log_scalar('train/lr', self.scheduler.get_last_lr()[0], it)
-                    self.logger.log_metrics('train', 'time', (time.time()-self.last_time)/self.report_interval, it)
-                self.last_time = time.time()
-                self.train_integrator.finalize('train', it)
-                self.train_integrator.reset_except_hooks()
+            if self._do_log or self._is_train:
+                losses = self.loss_computer.compute({**data, **out}, it)
 
-            if it % self.save_model_interval == 0 and it != 0:
-                if self.logger is not None:
-                    self.save(it)
+                # Logging
+                if self._do_log:
+                    self.integrator.add_dict(losses)
+                    if self._is_train:
+                        if it % self.save_im_interval == 0 and it != 0:
+                            if self.logger is not None:
+                                images = {**data, **out}
+                                size = (320, 320)
+                                self.logger.log_cv2('train/pairs', pool_fusion(images, size=size), it)
+                    else:
+                        # Validation save
+                        if data['val_iter'] % 10 == 0:
+                            if self.logger is not None:
+                                images = {**data, **out}
+                                size = (320, 320)
+                                self.logger.log_cv2('val/pairs', pool_fusion(images, size=size), it)
+
+            if self._is_train:
+                if (it) % self.report_interval == 0 and it != 0:
+                    if self.logger is not None:
+                        self.logger.log_scalar('train/lr', self.scheduler.get_last_lr()[0], it)
+                        self.logger.log_metrics('train', 'time', (time.time()-self.last_time)/self.report_interval, it)
+                    self.last_time = time.time()
+                    self.train_integrator.finalize('train', it)
+                    self.train_integrator.reset_except_hooks()
+
+                if it % self.save_model_interval == 0 and it != 0:
+                    if self.logger is not None:
+                        self.save(it)
 
             # Backward pass
-            self.optimizer.zero_grad(set_to_none=True) 
-            losses['total_loss'].backward() 
-            self.optimizer.step()
+            self.optimizer.zero_grad(set_to_none=True)
+            if self.para['amp']:
+                self.scaler.scale(losses['total_loss']).backward()
+                self.scaler.step(self.optimizer)
+                self.scaler.update()
+            else:
+                losses['total_loss'].backward() 
+                self.optimizer.step()
             self.scheduler.step()
 
     def save(self, it):

@@ -5,10 +5,10 @@ import urllib.request
 
 os.makedirs('saves', exist_ok=True)
 print('Downloading propagation model...')
-gdown.download('https://drive.google.com/uc?id=19dfbVDndFkboGLHESi8DGtuxF1B21Nm8', output='saves/propagation_model.pth', quiet=False)
+gdown.download('https://drive.google.com/uc?id=1mRrE0uCI2ktdWlUgapJI_KmgeIiF2eOm', output='saves/stcn.pth', quiet=False)
 
 print('Downloading fusion model...')
-gdown.download('https://drive.google.com/uc?id=1Lc1lI5-ix4WsCRdipACXgvS3G-o0lMoz', output='saves/fusion.pth', quiet=False)
+gdown.download('https://drive.google.com/uc?id=1MAbWHrOjlze9vPQdW-HxMnvjPpaZlfLv', output='saves/fusion_stcn.pth', quiet=False)
 
 print('Downloading s2m model...')
 gdown.download('https://drive.google.com/uc?id=1HKwklVey3P2jmmdmrACFlkXtcvNxbKMM', output='saves/s2m.pth', quiet=False)

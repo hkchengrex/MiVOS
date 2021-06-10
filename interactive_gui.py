@@ -979,8 +979,8 @@ if __name__ == '__main__':
     
     # Arguments parsing
     parser = ArgumentParser()
-    parser.add_argument('--prop_model', default='saves/propagation_model.pth')
-    parser.add_argument('--fusion_model', default='saves/fusion.pth')
+    parser.add_argument('--prop_model', default='saves/stcn.pth')
+    parser.add_argument('--fusion_model', default='saves/fusion_stcn.pth')
     parser.add_argument('--s2m_model', default='saves/s2m.pth')
     parser.add_argument('--fbrs_model', default='saves/fbrs.pth')
     parser.add_argument('--images', help='Folders containing input images. Either this or --video need to be specified.')
@@ -993,6 +993,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     with torch.cuda.amp.autocast(enabled=not args.no_amp):
+
         # Load our checkpoint
         prop_saved = torch.load(args.prop_model)
         prop_model = PropagationNetwork().cuda().eval()

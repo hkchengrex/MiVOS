@@ -6,12 +6,10 @@ See eval_semi_davis.py / eval_interactive_davis.py for examples
 
 import torch
 import numpy as np
-import cv2
 
 from model.propagation.prop_net import PropagationNetwork
 from model.fusion_net import FusionNet
-from model.aggregate import aggregate_sbg, aggregate_wbg
-from davisinteractive.utils.scribbles import scribbles2mask
+from model.aggregate import aggregate_wbg
 
 from util.tensor_util import pad_divide_by
 
@@ -45,22 +43,22 @@ class InferenceCore:
         if mem_profile == 0:
             self.data_dev = device
             self.result_dev = device
-            self.q_buf_size = 105
+            self.k_buf_size = 105
             self.i_buf_size = -1 # no need to buffer image
         elif mem_profile == 1:
             self.data_dev = 'cpu'
             self.result_dev = device
-            self.q_buf_size = 105
+            self.k_buf_size = 105
             self.i_buf_size = 105
         elif mem_profile == 2:
             self.data_dev = 'cpu'
             self.result_dev = 'cpu'
-            self.q_buf_size = 3
+            self.k_buf_size = 3
             self.i_buf_size = 3
         else:
             self.data_dev = 'cpu'
             self.result_dev = 'cpu'
-            self.q_buf_size = 1
+            self.k_buf_size = 1
             self.i_buf_size = 1
 
         # True dimensions
@@ -89,7 +87,7 @@ class InferenceCore:
         self.kh = self.nh//16
         self.kw = self.nw//16
 
-        self.query_buf = {}
+        self.key_buf = {}
         self.image_buf = {}
         self.interacted = set()
 
@@ -110,15 +108,14 @@ class InferenceCore:
 
         return result
 
-    def get_query_kv_buffered(self, idx):
-        # Queries' key/value never change, so we can buffer them here
-        if idx not in self.query_buf:
+    def get_key_feat_buffered(self, idx):
+        if idx not in self.key_buf:
             # Flush buffer
-            if len(self.query_buf) > self.q_buf_size:
-                self.query_buf = {}
+            if len(self.key_buf) > self.k_buf_size:
+                self.key_buf = {}
 
-            self.query_buf[idx] = self.prop_net.get_query_values(self.get_image_buffered(idx))
-        result = self.query_buf[idx]
+            self.key_buf[idx] = self.prop_net.encode_key(self.get_image_buffered(idx))
+        result = self.key_buf[idx]
 
         return result
 
@@ -142,57 +139,47 @@ class InferenceCore:
         else:
             closest_ti = max([ti for ti in self.interacted if ti < idx] + [-1])
             total_m = (idx - closest_ti - 1)//self.mem_freq + 1 + num_certain_keys
-        K, CK, _, H, W = key_k.shape
-        _, CV, _, _, _ = key_v.shape
+        _, CK, _, H, W = key_k.shape
+        K, CV, _, _, _ = key_v.shape
 
         # Pre-allocate keys/values memory
-        keys = torch.empty((K, CK, total_m, H, W), dtype=torch.float32, device=self.device)
+        keys = torch.empty((1, CK, total_m, H, W), dtype=torch.float32, device=self.device)
         values = torch.empty((K, CV, total_m, H, W), dtype=torch.float32, device=self.device)
 
         # Initial key/value passed in
         keys[:,:,0:num_certain_keys] = self.certain_mem_k
         values[:,:,0:num_certain_keys] = self.certain_mem_v
-        prev_in_mem = True
         last_ti = idx
 
         # Note that we never reach closest_ti, just the frame before it
         if forward:
             this_range = range(idx+1, closest_ti)
-            step = +1
             end = closest_ti - 1
         else:
             this_range = range(idx-1, closest_ti, -1)
-            step = -1
             end = closest_ti + 1
 
         for ti in this_range:
-            if prev_in_mem:
-                this_k = keys[:,:,:m_front]
-                this_v = values[:,:,:m_front]
-            else:
-                this_k = keys[:,:,:m_front+1]
-                this_v = values[:,:,:m_front+1]
-            query = self.get_query_kv_buffered(ti)
-            out_mask = self.prop_net.segment_with_query(this_k, this_v, *query)
+            this_k = keys[:,:,:m_front]
+            this_v = values[:,:,:m_front]
+            k16, qv16, qf16, qf8, qf4 = self.get_key_feat_buffered(ti)
+            out_mask = self.prop_net.segment_with_query(this_k, this_v, qf8, qf4, k16, qv16)
 
             out_mask = aggregate_wbg(out_mask, keep_bg=True)
             self.prob2[:,ti] = out_mask.to(self.result_dev, non_blocking=True)
 
-            if ti != end:
-                keys[:,:,m_front:m_front+1], values[:,:,m_front:m_front+1] = self.prop_net.memorize(
-                        self.get_image_buffered(ti), out_mask[1:])
-                if abs(ti-last_ti) >= self.mem_freq:
-                    # Memorize the frame
-                    m_front += 1
-                    last_ti = ti
-                    prev_in_mem = True
-                else:
-                    prev_in_mem = False
+            if ti != end and abs(ti-last_ti) >= self.mem_freq:
+                keys[:,:,m_front:m_front+1] = k16.unsqueeze(2)
+                values[:,:,m_front:m_front+1] = self.prop_net.encode_value(
+                        self.get_image_buffered(ti), qf16, out_mask[1:])
+
+                m_front += 1
+                last_ti = ti
 
             # In-place fusion, maximizes the use of queried buffer
             # esp. for long sequence where the buffer will be flushed
             if (closest_ti != self.t) and (closest_ti != -1):
-                self.prob1[:,ti] = self.fuse_one_frame(closest_ti, idx, ti, key_k, query[3]
+                self.prob1[:,ti] = self.fuse_one_frame(closest_ti, idx, ti, key_k, k16
                                     ).to(self.result_dev, non_blocking=True)
             else:
                 self.prob1[:,ti] = self.prob2[:,ti]
@@ -212,11 +199,10 @@ class InferenceCore:
         nc = abs(tc-ti) / abs(tc-tr)
         nr = abs(tr-ti) / abs(tc-tr)
         dist = torch.FloatTensor([nc, nr]).to(self.device).unsqueeze(0)
+        attn_map = self.prop_net.get_attention(mk16, self.pos_mask_diff, self.neg_mask_diff, qk16)
         for k in range(1, self.k+1):
-            attn_map = self.prop_net.get_attention(mk16[k-1:k], self.pos_mask_diff[k:k+1], self.neg_mask_diff[k:k+1], qk16)
-
             w = torch.sigmoid(self.fuse_net(self.get_image_buffered(ti), 
-                    self.prob1[k:k+1,ti].to(self.device), self.prob2[k:k+1,ti].to(self.device), attn_map, dist))
+                    self.prob1[k:k+1,ti].to(self.device), self.prob2[k:k+1,ti].to(self.device), attn_map[k:k+1], dist))
             prob[k-1] = w 
         return aggregate_wbg(prob, keep_bg=True)
 
@@ -240,7 +226,9 @@ class InferenceCore:
 
         self.prob1[:, idx] = mask
         self.prob2[:, idx] = mask
-        key_k, key_v = self.prop_net.memorize(self.get_image_buffered(idx), mask[1:])
+        key_k, _, qf16, _, _ = self.get_key_feat_buffered(idx)
+        key_k = key_k.unsqueeze(2)
+        key_v = self.prop_net.encode_value(self.get_image_buffered(idx), qf16, mask[1:])
 
         if self.certain_mem_k is None:
             self.certain_mem_k = key_k
@@ -256,8 +244,8 @@ class InferenceCore:
             total_num = front_limit - back_limit - 2 # -1 for shift, -1 for center frame
             total_cb(total_num)
 
-        forward_tc = self.do_pass(key_k, key_v, idx, True, step_cb=step_cb)
-        bakward_tc = self.do_pass(key_k, key_v, idx, False, step_cb=step_cb)
+        self.do_pass(key_k, key_v, idx, True, step_cb=step_cb)
+        self.do_pass(key_k, key_v, idx, False, step_cb=step_cb)
         
         # This is a more memory-efficient argmax
         for ti in range(self.t):

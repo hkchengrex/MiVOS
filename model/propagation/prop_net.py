@@ -6,7 +6,6 @@ import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision import models
 
 from model.propagation.modules import *
 
@@ -76,14 +75,17 @@ class EvalMemoryReader(nn.Module):
         self.top_k = top_k
         self.km = km
 
-    def forward(self, mk, mv, qk):
+    def get_affinity(self, mk, qk):
         B, CK, T, H, W = mk.shape
-        _, CV, _, _, _ = mv.shape
 
-        mi = mk.view(B, CK, T*H*W).transpose(1, 2)
-        qi = qk.view(1, CK, H*W).expand(B, -1, -1) / math.sqrt(CK)  # B * CK * HW
- 
-        affinity = torch.bmm(mi, qi)  # B, THW, HW
+        mk = mk.flatten(start_dim=2)
+        qk = qk.flatten(start_dim=2)
+
+        a = mk.pow(2).sum(1).unsqueeze(2)
+        b = 2 * (mk.transpose(1, 2) @ qk)
+        c = qk.pow(2).sum(1).unsqueeze(1)
+
+        affinity = (-a+b-c) / math.sqrt(CK)   # B, THW, HW
 
         if self.km is not None:
             # Make a bunch of Gaussian distributions
@@ -98,6 +100,11 @@ class EvalMemoryReader(nn.Module):
                 affinity = softmax_w_g_top(affinity, top=self.top_k, gauss=None)  # B, THW, HW
             else:
                 affinity = F.softmax(affinity, dim=1)
+
+        return affinity
+
+    def readout(self, affinity, mv):
+        B, CV, T, H, W = mv.shape
 
         mo = mv.view(B, CV, T*H*W) 
         mem = torch.bmm(mo, affinity) # Weighted-sum B, CV, HW
@@ -116,34 +123,37 @@ class AttentionMemory(nn.Module):
         """
         B, CK, _, H, W = mk.shape
 
-        mk = mk.view(B, CK, H*W) 
-        mk = torch.transpose(mk, 1, 2)  # B * HW * CK
- 
-        qk = qk.view(1, CK, H*W).expand(B, -1, -1) / math.sqrt(CK)  # B * CK * HW
- 
-        affinity = torch.bmm(mk, qk) # B * HW * HW
+        mk = mk.flatten(start_dim=2)
+        qk = qk.flatten(start_dim=2)
+
+        a = mk.pow(2).sum(1).unsqueeze(2)
+        b = 2 * (mk.transpose(1, 2) @ qk)
+        c = qk.pow(2).sum(1).unsqueeze(1)
+
+        affinity = (-a+b-c) / math.sqrt(CK)   # B, THW, HW
         affinity = F.softmax(affinity, dim=1)
 
         return affinity
 
 class PropagationNetwork(nn.Module):
-    def __init__(self, top_k=50):
+    def __init__(self, top_k=20):
         super().__init__()
-        self.mask_rgb_encoder = MaskRGBEncoder() 
-        self.rgb_encoder = RGBEncoder() 
+        self.value_encoder = ValueEncoder() 
+        self.key_encoder = KeyEncoder() 
 
-        self.kv_m_f16 = KeyValue(1024, keydim=128, valdim=512)
-        self.kv_q_f16 = KeyValue(1024, keydim=128, valdim=512)
+        self.key_proj = KeyProjection(1024, keydim=64)
+        self.key_comp = nn.Conv2d(1024, 512, kernel_size=3, padding=1)
 
         self.memory = EvalMemoryReader(top_k, km=None)
         self.attn_memory = AttentionMemory(top_k)
         self.decoder = Decoder()
 
-    def memorize(self, frame, masks): 
+    def encode_value(self, frame, kf16, masks): 
         k, _, h, w = masks.shape
 
         # Extract memory key/value for a frame with multiple masks
-        frame = frame.view(1, 3, h, w).repeat(k, 1, 1, 1)
+        frame = frame.view(1, 3, h, w).expand(k, -1, -1, -1)
+        kf16 = kf16.expand(k, -1, -1, -1)
         # Compute the "others" mask
         if k != 1:
             others = torch.cat([
@@ -154,32 +164,33 @@ class PropagationNetwork(nn.Module):
         else:
             others = torch.zeros_like(masks)
 
-        f16 = self.mask_rgb_encoder(frame, masks, others)
-        k16, v16 = self.kv_m_f16(f16) # num_objects, 128 and 512, H/16, W/16
+        f16 = self.value_encoder(frame, kf16, masks, others)
+        return f16.unsqueeze(2) # B*512*T*H*W
 
-        return k16.unsqueeze(2), v16.unsqueeze(2)
+    def encode_key(self, frame): 
+        f16, f8, f4 = self.key_encoder(frame)
+        k16 = self.key_proj(f16)
+        f16_thin = self.key_comp(f16)
 
-    def get_query_values(self, frame):
-        f16, f8, f4 = self.rgb_encoder(frame)
-        k16, v16 = self.kv_q_f16(f16)  
+        return k16, f16_thin, f16, f8, f4
 
-        return f16, f8, f4, k16, v16
+    def segment_with_query(self, mk16, mv16, qf8, qf4, qk16, qv16): 
+        affinity = self.memory.get_affinity(mk16, qk16)
 
-    def segment_with_query(self, keys, values, f16, f8, f4, k16, v16): 
-        k = keys.shape[0]
+        k = mv16.shape[0]
         # Do it batch by batch to reduce memory usage
         batched = 1
         m4 = torch.cat([
-            self.memory(keys[i:i+batched], values[i:i+batched], k16) for i in range(0, k, batched)
+            self.memory.readout(affinity, mv16[i:i+1]) for i in range(0, k, batched)
         ], 0)
 
-        v16 = v16.expand(k, -1, -1, -1)
-        m4 = torch.cat([m4, v16], 1)
+        qv16 = qv16.expand(k, -1, -1, -1)
+        m4 = torch.cat([m4, qv16], 1)
 
-        return torch.sigmoid(self.decoder(m4, f8, f4))
+        return torch.sigmoid(self.decoder(m4, qf8, qf4))
 
-    def get_W(self, mk16, qk):
-        W = self.attn_memory(mk16, qk)
+    def get_W(self, mk16, qk16):
+        W = self.attn_memory(mk16, qk16)
         return W
 
     def get_attention(self, mk16, pos_mask, neg_mask, qk16):

@@ -8,6 +8,8 @@ class HyperParameters():
     def parse(self, unknown_arg_ok=False):
         parser = ArgumentParser()
 
+        parser.add_argument('--no_amp', action='store_true')
+
         # Data parameters
         parser.add_argument('--yv_root', help='YouTubeVOS data root', default='../YouTube')
         parser.add_argument('--davis_root', help='DAVIS data root', default='../DAVIS')
@@ -42,6 +44,8 @@ class HyperParameters():
             self.args = vars(args)
         else:
             self.args = vars(parser.parse_args())
+
+        self.args['amp'] = not self.args['no_amp']
 
         # Stage-dependent hyperparameters
         # Assign default if not given
