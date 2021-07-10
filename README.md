@@ -86,6 +86,8 @@ Precomputed result, with the json summary: [[Google Drive]](https://drive.google
 | (+) BL30K pretraining | 87.4 | 88.0 |
 | (+) Learnable fusion | 87.6 | 88.2 |
 | (+) Difference-aware fusion (full model) | 87.9 | 88.5 |
+| Full model, without BL30K for propagation/fusion | 87.4 | 88.0 |
+| [Full model, STCN backbone](https://github.com/hkchengrex/MiVOS/tree/MiVOS-STCN) | 88.4 | 88.8 |
 
 ## Pretrained models
 
