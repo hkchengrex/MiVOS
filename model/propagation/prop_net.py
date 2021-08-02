@@ -55,7 +55,7 @@ def softmax_w_g_top(x, top=None, gauss=None):
 
         x_exp_sum = torch.sum(x_exp, dim=1, keepdim=True)
         x_exp /= x_exp_sum
-        x.zero_().scatter_(1, indices, x_exp) # B * THW * HW
+        x.zero_().scatter_(1, indices, x_exp.type(x.dtype)) # B * THW * HW
 
         output = x
     else:

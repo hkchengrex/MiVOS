@@ -638,9 +638,7 @@ class App(QWidget):
         self.update_interacted_mask()
 
     def on_reset(self):
-        # Edit prod2 but not prod1 -- we still need the mask diff
-        self.processor.prob2[:, self.cursur].zero_()
-        self.processor.prob2[0, self.cursur] = 1e-7
+        # DO not edit prob -- we still need the mask diff
         self.processor.masks[self.cursur].zero_()
         self.processor.np_masks[self.cursur].fill(0)
         self.current_mask[self.cursur].fill(0)
@@ -675,7 +673,7 @@ class App(QWidget):
         if len(self.this_frame_interactions) > 0:
             prev_soft_mask = self.this_frame_interactions[-1].out_prob
         else:
-            prev_soft_mask = self.processor.prob2[1:, self.cursur]
+            prev_soft_mask = self.processor.prob[1:, self.cursur]
         image = self.processor.images[:,self.cursur]
 
         self.interaction = LocalInteraction(
@@ -749,7 +747,7 @@ class App(QWidget):
 
         # Initial info
         if len(self.this_local_interactions) == 0:
-            prev_soft_mask = self.processor.prob2[1:, self.cursur]
+            prev_soft_mask = self.processor.prob[1:, self.cursur]
         else:
             prev_soft_mask = self.this_local_interactions[-1].out_prob
         self.local_interactions['bounding_box'] = self.local_bb
@@ -826,7 +824,7 @@ class App(QWidget):
                     if len(self.this_frame_interactions) > 0:
                         prev_soft_mask = self.this_frame_interactions[-1].out_prob
                     else:
-                        prev_soft_mask = self.processor.prob2[1:, self.cursur]
+                        prev_soft_mask = self.processor.prob[1:, self.cursur]
                 else:
                     # Not used if the previous interaction is still valid
                     # Don't worry about stacking effects here

@@ -76,11 +76,9 @@ class InferenceCore:
         self.masks = torch.zeros((t, 1, nh, nw), dtype=torch.uint8, device=self.result_dev)
         self.np_masks = np.zeros((t, h, w), dtype=np.uint8)
 
-        # Background included, prob2 is an output buffer
-        self.prob1 = torch.zeros((self.k+1, t, 1, nh, nw), dtype=torch.float32, device=self.result_dev)
-        self.prob2 = torch.zeros((self.k+1, t, 1, nh, nw), dtype=torch.float32, device=self.result_dev)
-        self.prob1[0] = 1e-7
-        self.prob2[0] = 1e-7
+        # Object probabilities, background included
+        self.prob = torch.zeros((self.k+1, t, 1, nh, nw), dtype=torch.float32, device=self.result_dev)
+        self.prob[0] = 1e-7
 
         self.t, self.h, self.w = t, h, w
         self.nh, self.nw = nh, nw
@@ -166,7 +164,6 @@ class InferenceCore:
             out_mask = self.prop_net.segment_with_query(this_k, this_v, qf8, qf4, k16, qv16)
 
             out_mask = aggregate_wbg(out_mask, keep_bg=True)
-            self.prob2[:,ti] = out_mask.to(self.result_dev, non_blocking=True)
 
             if ti != end and abs(ti-last_ti) >= self.mem_freq:
                 keys[:,:,m_front:m_front+1] = k16.unsqueeze(2)
@@ -179,10 +176,10 @@ class InferenceCore:
             # In-place fusion, maximizes the use of queried buffer
             # esp. for long sequence where the buffer will be flushed
             if (closest_ti != self.t) and (closest_ti != -1):
-                self.prob1[:,ti] = self.fuse_one_frame(closest_ti, idx, ti, key_k, k16
-                                    ).to(self.result_dev, non_blocking=True)
+                self.prob[:,ti] = self.fuse_one_frame(closest_ti, idx, ti, self.prob[:,ti], out_mask, 
+                                        key_k, k16).to(self.result_dev, non_blocking=True)
             else:
-                self.prob1[:,ti] = self.prob2[:,ti]
+                self.prob[:,ti] = out_mask.to(self.result_dev, non_blocking=True)
 
             # Callback function for the GUI
             if step_cb is not None:
@@ -190,7 +187,7 @@ class InferenceCore:
 
         return closest_ti
 
-    def fuse_one_frame(self, tc, tr, ti, mk16, qk16):
+    def fuse_one_frame(self, tc, tr, ti, prev_mask, curr_mask, mk16, qk16):
         assert(tc<ti<tr or tr<ti<tc)
 
         prob = torch.zeros((self.k, 1, self.nh, self.nw), dtype=torch.float32, device=self.device)
@@ -202,7 +199,7 @@ class InferenceCore:
         attn_map = self.prop_net.get_attention(mk16, self.pos_mask_diff, self.neg_mask_diff, qk16)
         for k in range(1, self.k+1):
             w = torch.sigmoid(self.fuse_net(self.get_image_buffered(ti), 
-                    self.prob1[k:k+1,ti].to(self.device), self.prob2[k:k+1,ti].to(self.device), attn_map[k:k+1], dist))
+                    prev_mask[k:k+1].to(self.device), curr_mask[k:k+1].to(self.device), attn_map[k:k+1], dist))
             prob[k-1] = w 
         return aggregate_wbg(prob, keep_bg=True)
 
@@ -220,12 +217,11 @@ class InferenceCore:
 
         mask = mask.to(self.device)
         mask, _ = pad_divide_by(mask, 16, mask.shape[-2:])
-        self.mask_diff = mask - self.prob1[:, idx].to(self.device)
+        self.mask_diff = mask - self.prob[:, idx].to(self.device)
         self.pos_mask_diff = self.mask_diff.clamp(0, 1)
         self.neg_mask_diff = (-self.mask_diff).clamp(0, 1)
 
-        self.prob1[:, idx] = mask
-        self.prob2[:, idx] = mask
+        self.prob[:, idx] = mask
         key_k, _, qf16, _, _ = self.get_key_feat_buffered(idx)
         key_k = key_k.unsqueeze(2)
         key_v = self.prop_net.encode_value(self.get_image_buffered(idx), qf16, mask[1:])
@@ -249,7 +245,7 @@ class InferenceCore:
         
         # This is a more memory-efficient argmax
         for ti in range(self.t):
-            self.masks[ti] = torch.argmax(self.prob1[:,ti], dim=0)
+            self.masks[ti] = torch.argmax(self.prob[:,ti], dim=0)
         out_masks = self.masks
 
         # Trim paddings
@@ -259,8 +255,6 @@ class InferenceCore:
             out_masks = out_masks[:,:,:,self.pad[0]:-self.pad[1]]
 
         self.np_masks = (out_masks.detach().cpu().numpy()[:,0]).astype(np.uint8)
-
-        self.prob2 = self.prob1.clone()
 
         return self.np_masks
 
@@ -272,7 +266,6 @@ class InferenceCore:
 
         Return: all mask results in np format for DAVIS evaluation
         """
-        self.prob2[:, idx] = prob_mask.to(self.result_dev)
         mask = torch.argmax(prob_mask, 0)
         self.masks[idx] = mask
 
