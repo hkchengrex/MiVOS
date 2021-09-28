@@ -60,7 +60,7 @@ Please cite our papers if you find this repo useful!
 @inproceedings{cheng2021stcn,
   title={Rethinking Space-Time Networks with Improved Memory Coverage for Efficient Video Object Segmentation},
   author={Cheng, Ho Kei and Tai, Yu-Wing and Tang, Chi-Keung},
-  booktitle={arXiv:2106.05210},
+  booktitle={NeurIPS},
   year={2021}
 }
 
