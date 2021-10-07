@@ -13,11 +13,7 @@ from model.fusion_net import FusionNet
 from model.s2m.s2m_network import deeplabv3plus_resnet50 as S2M
 from dataset.davis_test_dataset import DAVISTestDataset
 from davis_processor import DAVISProcessor
-from util.tensor_util import compute_multi_class_iou
 
-from davisinteractive.dataset import Davis
-from davisinteractive import utils as d_utils
-from davisinteractive.utils.scribbles import scribbles2mask
 from davisinteractive.session.session import DavisInteractiveSession
 
 """

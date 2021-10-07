@@ -8,7 +8,6 @@ It is terribly long... GUI code is hard to write!
 import sys
 import os
 from os import path
-import time
 import functools
 from argparse import ArgumentParser
 
@@ -17,15 +16,13 @@ from PIL import Image
 import numpy as np
 import torch
 from collections import deque
-from copy import deepcopy
-import datetime
 
-from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QComboBox, QGridLayout, 
-    QGroupBox, QHBoxLayout, QLabel, QMenu, QMenuBar, QPushButton, QTextEdit, 
-    QPlainTextEdit, QVBoxLayout, QAction, QSizePolicy, QButtonGroup, QSlider, 
-    QLCDNumber, QShortcut, QRadioButton, QProgressBar, QFileDialog)
+from PyQt5.QtWidgets import (QWidget, QApplication, QComboBox, 
+    QHBoxLayout, QLabel, QPushButton, QTextEdit, 
+    QPlainTextEdit, QVBoxLayout, QSizePolicy, QButtonGroup, QSlider, 
+    QShortcut, QRadioButton, QProgressBar, QFileDialog)
 
-from PyQt5.QtGui import QIcon, QPixmap, QPainter, QColor, QKeySequence, QImage, QTextCursor
+from PyQt5.QtGui import QPixmap, QKeySequence, QImage, QTextCursor
 from PyQt5.QtCore import Qt, QTimer 
 from PyQt5 import QtCore
 
@@ -35,8 +32,7 @@ from interact.fbrs_controller import FBRSController
 from model.propagation.prop_net import PropagationNetwork
 from model.fusion_net import FusionNet
 from model.s2m.s2m_network import deeplabv3plus_resnet50 as S2M
-from model.aggregate import aggregate_sbg, aggregate_wbg
-from util.tensor_util import pad_divide_by, unpad, unpad_3dim, compute_multi_class_iou_both_idx
+from util.tensor_util import unpad_3dim
 from util.palette import pal_color_map
 
 from interact.interactive_utils import *
