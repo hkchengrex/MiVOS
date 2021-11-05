@@ -8,7 +8,6 @@ It is terribly long... GUI code is hard to write!
 import sys
 import os
 from os import path
-import time
 import functools
 from argparse import ArgumentParser
 
@@ -17,15 +16,13 @@ from PIL import Image
 import numpy as np
 import torch
 from collections import deque
-from copy import deepcopy
-import datetime
 
-from PyQt5.QtWidgets import (QWidget, QApplication, QMainWindow, QComboBox, QGridLayout, 
-    QGroupBox, QHBoxLayout, QLabel, QMenu, QMenuBar, QPushButton, QTextEdit, 
-    QPlainTextEdit, QVBoxLayout, QAction, QSizePolicy, QButtonGroup, QSlider, 
-    QLCDNumber, QShortcut, QRadioButton, QProgressBar, QFileDialog)
+from PyQt5.QtWidgets import (QWidget, QApplication, QComboBox, 
+    QHBoxLayout, QLabel, QPushButton, QTextEdit, 
+    QPlainTextEdit, QVBoxLayout, QSizePolicy, QButtonGroup, QSlider, 
+    QShortcut, QRadioButton, QProgressBar, QFileDialog)
 
-from PyQt5.QtGui import QIcon, QPixmap, QPainter, QColor, QKeySequence, QImage, QTextCursor
+from PyQt5.QtGui import QPixmap, QKeySequence, QImage, QTextCursor
 from PyQt5.QtCore import Qt, QTimer 
 from PyQt5 import QtCore
 
@@ -35,8 +32,7 @@ from interact.fbrs_controller import FBRSController
 from model.propagation.prop_net import PropagationNetwork
 from model.fusion_net import FusionNet
 from model.s2m.s2m_network import deeplabv3plus_resnet50 as S2M
-from model.aggregate import aggregate_sbg, aggregate_wbg
-from util.tensor_util import pad_divide_by, unpad, unpad_3dim, compute_multi_class_iou_both_idx
+from util.tensor_util import unpad_3dim
 from util.palette import pal_color_map
 
 from interact.interactive_utils import *
@@ -638,9 +634,7 @@ class App(QWidget):
         self.update_interacted_mask()
 
     def on_reset(self):
-        # Edit prod2 but not prod1 -- we still need the mask diff
-        self.processor.prob2[:, self.cursur].zero_()
-        self.processor.prob2[0, self.cursur] = 1e-7
+        # DO not edit prob -- we still need the mask diff
         self.processor.masks[self.cursur].zero_()
         self.processor.np_masks[self.cursur].fill(0)
         self.current_mask[self.cursur].fill(0)
@@ -675,7 +669,7 @@ class App(QWidget):
         if len(self.this_frame_interactions) > 0:
             prev_soft_mask = self.this_frame_interactions[-1].out_prob
         else:
-            prev_soft_mask = self.processor.prob2[1:, self.cursur]
+            prev_soft_mask = self.processor.prob[1:, self.cursur]
         image = self.processor.images[:,self.cursur]
 
         self.interaction = LocalInteraction(
@@ -749,7 +743,7 @@ class App(QWidget):
 
         # Initial info
         if len(self.this_local_interactions) == 0:
-            prev_soft_mask = self.processor.prob2[1:, self.cursur]
+            prev_soft_mask = self.processor.prob[1:, self.cursur]
         else:
             prev_soft_mask = self.this_local_interactions[-1].out_prob
         self.local_interactions['bounding_box'] = self.local_bb
@@ -826,7 +820,7 @@ class App(QWidget):
                     if len(self.this_frame_interactions) > 0:
                         prev_soft_mask = self.this_frame_interactions[-1].out_prob
                     else:
-                        prev_soft_mask = self.processor.prob2[1:, self.cursur]
+                        prev_soft_mask = self.processor.prob[1:, self.cursur]
                 else:
                     # Not used if the previous interaction is still valid
                     # Don't worry about stacking effects here
