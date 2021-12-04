@@ -19,7 +19,8 @@ class S2MController:
         self.device = device
 
     def interact(self, image, prev_mask, scr_mask):
-        image = image.to(self.device, non_blocking=True)        
+        image = image.to(self.device, non_blocking=True)    
+        prev_mask = prev_mask.to(self.device, non_blocking=True)    
 
         h, w = image.shape[-2:]
         unaggre_mask = torch.zeros((self.num_objects, 1, h, w), dtype=torch.float32, device=image.device)
