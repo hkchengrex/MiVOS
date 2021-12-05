@@ -11,7 +11,6 @@ import cv2
 from model.propagation.prop_net import PropagationNetwork
 from model.fusion_net import FusionNet
 from model.aggregate import aggregate_sbg, aggregate_wbg
-from davisinteractive.utils.scribbles import scribbles2mask
 
 from util.tensor_util import pad_divide_by
 
