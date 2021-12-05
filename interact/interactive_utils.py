@@ -69,6 +69,11 @@ def load_video(path, min_side=None):
         if frame is None:
             break
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        if min_side:
+            h, w = frame.shape[:2]
+            new_w = (w*min_side//min(w, h))
+            new_h = (h*min_side//min(w, h))
+            frame = cv2.resize(frame, (new_w, new_h), interpolation=cv2.INTER_CUBIC)
         frame_list.append(frame)
     frames = np.stack(frame_list, axis=0)
     return frames

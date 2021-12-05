@@ -984,6 +984,7 @@ if __name__ == '__main__':
     parser.add_argument('--mem_profile', default=0, type=int, help='0 - Faster and more memory intensive; 2 - Slower and less memory intensive. Default: 0.')
     parser.add_argument('--masks', help='Optional, Ground truth masks', default=None)
     parser.add_argument('--no_amp', help='Turn off AMP', action='store_true')
+    parser.add_argument('--resolution', help='Pass -1 to use original size', default=480, type=int)
     args = parser.parse_args()
 
     with torch.cuda.amp.autocast(enabled=not args.no_amp):
@@ -1007,9 +1008,9 @@ if __name__ == '__main__':
 
         # Loads the images/masks
         if args.images is not None:
-            images = load_images(args.images, 480)
+            images = load_images(args.images, args.resolution if args.resolution > 0 else None)
         elif args.video is not None:
-            images = load_video(args.video, 480)
+            images = load_video(args.video, args.resolution if args.resolution > 0 else None)
         else:
             raise NotImplementedError('You must specify either --images or --video!')
 
@@ -1018,11 +1019,6 @@ if __name__ == '__main__':
         else:
             masks = None
 
-        if args.masks is not None:
-            masks = load_masks(args.masks)
-        else:
-            masks = None
-        
         # Determine the number of objects
         num_objects = args.num_objects
         if num_objects is None:

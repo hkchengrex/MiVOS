@@ -9,7 +9,11 @@ import numpy as np
 
 from model.propagation.prop_net import PropagationNetwork
 from model.fusion_net import FusionNet
+<<<<<<< HEAD
 from model.aggregate import aggregate_wbg
+=======
+from model.aggregate import aggregate_sbg, aggregate_wbg
+>>>>>>> main
 
 from util.tensor_util import pad_divide_by
 
@@ -177,9 +181,9 @@ class InferenceCore:
             # esp. for long sequence where the buffer will be flushed
             if (closest_ti != self.t) and (closest_ti != -1):
                 self.prob[:,ti] = self.fuse_one_frame(closest_ti, idx, ti, self.prob[:,ti], out_mask, 
-                                        key_k, k16).to(self.result_dev, non_blocking=True)
+                                        key_k, k16).to(self.result_dev)
             else:
-                self.prob[:,ti] = out_mask.to(self.result_dev, non_blocking=True)
+                self.prob[:,ti] = out_mask.to(self.result_dev)
 
             # Callback function for the GUI
             if step_cb is not None:
