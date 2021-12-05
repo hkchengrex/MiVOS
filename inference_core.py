@@ -9,11 +9,7 @@ import numpy as np
 
 from model.propagation.prop_net import PropagationNetwork
 from model.fusion_net import FusionNet
-<<<<<<< HEAD
 from model.aggregate import aggregate_wbg
-=======
-from model.aggregate import aggregate_sbg, aggregate_wbg
->>>>>>> main
 
 from util.tensor_util import pad_divide_by
 
