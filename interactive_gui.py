@@ -613,7 +613,7 @@ class App(QWidget):
                     self.interacted_mask = self.this_frame_interactions[-1].predict()
                 else:
                     self.reset_this_interaction()
-                    self.interacted_mask = self.processor.prob1[:, self.cursur].clone()
+                    self.interacted_mask = self.processor.prob[:, self.cursur].clone()
             else:
                 if self.interaction.can_undo():
                     self.interacted_mask = self.interaction.undo()
@@ -623,7 +623,7 @@ class App(QWidget):
                         self.interacted_mask = self.this_frame_interactions[-1].predict()
                     else:
                         self.reset_this_interaction()
-                        self.interacted_mask = self.processor.prob1[:, self.cursur].clone()
+                        self.interacted_mask = self.processor.prob[:, self.cursur].clone()
 
             # Update visualization
             if len(self.vis_hist) > 0:
