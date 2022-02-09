@@ -238,7 +238,8 @@ class InferenceCore:
             front_limit = min([ti for ti in self.interacted if ti > idx] + [self.t])
             back_limit = max([ti for ti in self.interacted if ti < idx] + [-1])
             total_num = front_limit - back_limit - 2 # -1 for shift, -1 for center frame
-            total_cb(total_num)
+            if total_num > 0:
+                total_cb(total_num)
 
         self.do_pass(key_k, key_v, idx, True, step_cb=step_cb)
         self.do_pass(key_k, key_v, idx, False, step_cb=step_cb)
