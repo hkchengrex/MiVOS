@@ -38,9 +38,12 @@ class DAVISProcessor:
     def to_mask(self, scribble):
         # First we select the only frame with scribble
         all_scr = scribble['scribbles']
+        # all_scr is a list. len(all_scr) == total number of frames
         for idx, s in enumerate(all_scr):
+            # The only non-empty element in all_scr is the frame that has been interacted with
             if len(s) != 0:
                 scribble['scribbles'] = [s]
+                # since we break here, idx will remain at the interacted frame and can be used below
                 break
             
         # Pass to DAVIS to change the path to an array
