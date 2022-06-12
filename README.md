@@ -4,7 +4,7 @@
 
 CVPR 2021
 
-### We replace the propagatron backbone with [SCTN](https://github.com/hkchengrex/STCN) in this branch. It is better and faster! Only the essentials are covered here. See the master branch for the rest.
+### We replace the propagatron backbone with [STCN](https://github.com/hkchengrex/STCN) in this branch. It is better and faster! Only the essentials are covered here. See the master branch for the rest.
 
 ## Quick start
 
