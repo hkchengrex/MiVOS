@@ -6,7 +6,7 @@ CVPR 2021
 
 [[arXiv]](https://arxiv.org/abs/2103.07941) [[Paper PDF]](https://arxiv.org/pdf/2103.07941.pdf) [[Project Page]](https://hkchengrex.github.io/MiVOS/) [[Demo]](https://hkchengrex.github.io/MiVOS/video.html#partb) [[Papers with Code]](https://paperswithcode.com/task/interactive-video-object-segmentation) [[Supplementary Material]](docs/supplementary.pdf)
 
-## Newer: check out our new work on long-term VOS [XMem](https://github.com/hkchengrex/XMem). It also includes an interactive GUI!
+## Newer: check out our new work [Cutie](https://github.com/hkchengrex/Cutie). It also includes an interactive GUI!
 
 ## New: see the [STCN branch](https://github.com/hkchengrex/MiVOS/tree/MiVOS-STCN) for a better and faster version.
 
