@@ -126,15 +126,8 @@ We noted that using probably half of the data is sufficient to reach full perfor
 
 #### Download
 
-You can either use the automatic script `download_bl30k.py` or download it manually below. Note that each segment is about 115GB in size -- 700GB in total. You are going to need ~1TB of free disk space to run the script (including extraction buffer).
-
-Google Drive is much faster in my experience. Your mileage might vary.
-
-Manual download: [[Google Drive]](https://drive.google.com/drive/folders/1KxriFZM8Y_-KbiA3D0PaMv6LQaatKFH-?usp=sharing) [[OneDrive]](https://uillinoisedu-my.sharepoint.com/:f:/g/personal/hokeikc2_illinois_edu/ElEqJXQqaqZAqG8QROa0VesBAw4FiOl5wleP2iq_KXDPyw?e=HLsvfY)
-
-**Note: Google might block the Google Drive link. You can 1) make a shortcut of the folder to your own Google Drive, and 2) use `rclone` to copy from your own Google Drive (would not count towards your storage limit).**
-
-[UST Mirror] (Reliability not guaranteed, speed throttled, do not use if others are available): <ckcpu1.cse.ust.hk:8080/MiVOS/BL30K_{a-f}.tar> (Replace {a-f} with the part that you need).
+Download via https://doi.org/10.13012/B2IDB-1702934_V1
+Note that each segment is about 115GB in size -- 700GB in total. You are going to need ~1TB of free disk space to run the script (including extraction buffer).
 
 MD5 Checksum:
 
